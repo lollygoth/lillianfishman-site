@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lillian Fishman</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 18px; -webkit-font-smoothing: antialiased; }
+
+    /* ── Color themes ── */
+    :root {
+      --bg:   #FFFEF9;
+      --fg:   #2a3439;
+      --foot: #ccc;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:   #1E2A3A;
+        --fg:   #F0EDE6;
+        --foot: #555;
+      }
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      padding: 4rem 0.5rem 3rem;
+      padding-right: 3.5rem;
+      max-width: 640px;
+      margin: 0 auto;
+      overflow-x: hidden;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    /* Year labels and footer legend extend beyond the content margin */
+    .title-row,
+    .year-label,
+    footer {
+      margin-right: -3rem;
+    }
+
+    header { margin-bottom: 3rem; }
+
+    header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .name-arrow {
+      font-weight: 400;
+      font-size: 1rem;
+      color: #F0266E;
+      -webkit-text-fill-color: #F0266E;
+    }
+
+    /* The name is clickable — cursor shows it */
+    #name-toggle {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    header p {
+      margin-top: 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--fg);
+      max-width: 100%;
+    }
+
+    section {
+      margin-bottom: 2.75rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+    }
+
+    section h2 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--fg);
+      margin-bottom: 1rem;
+      display: inline-block;
+      border: 1px solid var(--fg);
+      padding: 1px 6px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      cursor: default;
+    }
+
+    section h2:hover {
+      background-color: #F0266E;
+      color: #FFFEF9;
+      border-color: #F0266E;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      section h2:hover {
+        background-color: var(--fg);
+        color: var(--bg);
+        border-color: var(--fg);
+      }
+    }
+
+    .entry {
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .year-label {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--fg);
+      opacity: 0.4;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .entry .meta {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--fg);
+      margin-top: 0.1rem;
+      padding-left: 1rem;
+      background: transparent;
+    }
+
+    /*
+      ── PHOTO REVEAL EFFECT ──────────────────────────────────────────
+      Hovering any link reveals a portion of the photo through the text.
+      Clicking the name “Lillian Fishman” fades out the page and shows
+      the full photo. Click again (or press Escape) to close.
+
+      TO SWAP THE PHOTO:
+        1. Put your new image in the same folder as this HTML file
+        2. Find  var PHOTO = 'photo.jpg';  in the script below
+        3. Change 'photo.jpg' to your new filename
+      ─────────────────────────────────────────────────────────────────
+    */
+    a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
+      color: var(--fg);
+      text-decoration: none;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: var(--fg);
+      background-image: none;
+      background-repeat: no-repeat;
+      transition: -webkit-text-fill-color 0.15s ease;
+    }
+
+    a:hover {
+      -webkit-text-fill-color: transparent;
+    }
+
+    .entry .meta a {
+      font-weight: 400;
+      -webkit-text-fill-color: var(--fg);
+      text-decoration: underline;
+      text-decoration-color: var(--fg);
+      text-underline-offset: 3px;
+    }
+
+    .entry .meta a:hover {
+      -webkit-text-fill-color: transparent;
+    }
+
+    .book-title { font-style: normal; }
+
+    .underline-link {
+      text-decoration: underline;
+      text-decoration-color: var(--fg);
+      text-underline-offset: 3px;
+    }
+
+    .excerpt-link {
+      display: block;
+      margin-left: 1rem;
+      padding-left: 0.75rem;
+      text-indent: -0.75rem;
+    }
+
+    .excerpt-link a {
+      font-weight: 400 !important;
+      font-style: normal;
+      letter-spacing: 0.02em;
+      text-decoration: underline;
+      text-decoration-color: var(--fg);
+      text-underline-offset: 3px;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      font-size: 0.72rem;
+      color: var(--foot);
+    }
+
+    .legend {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--fg);
+      text-align: right;
+    }
+
+
+    /* Photo-reveal base styles for name toggle */
+    #name-toggle {
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: var(--fg);
+      background-repeat: no-repeat;
+      transition: -webkit-text-fill-color 0.15s ease;
+    }
+
+    #name-toggle:hover {
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ── Full-page photo overlay ── */
+    #photo-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      cursor: pointer;
+      padding: 8vw;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #photo-overlay.visible {
+      display: flex;
+    }
+
+    #overlay-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      outline: 1px solid var(--fg);
+      outline-offset: 0.5rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #overlay-img { outline-color: var(--fg); }
+    }
+
+    /* Disable photo reveal in dark mode */
+    @media (prefers-color-scheme: dark) {
+      a:hover,
+      #name-toggle:hover,
+      .entry .meta a:hover {
+        -webkit-text-fill-color: var(--fg) !important;
+      }
+      a:hover, .entry .meta a:hover {
+        -webkit-text-fill-color: var(--fg) !important;
+        opacity: 0.6;
+      }
+    }
+
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+
+      body {
+        padding: 2.5rem 2rem 3rem;
+        max-width: 100%;
+      }
+
+      .title-row, .year-label, footer {
+        margin-right: 0;
+      }
+
+      /* Prevent long titles from overflowing */
+      a, .entry .meta, h1, h2, p {
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+
+      /* Make overlay photo work well on small screens */
+      #photo-overlay {
+        padding: 5vw;
+      }
+
+      /* Hide year labels on mobile */
+      .year-label { display: none; }
+
+      /* Section heading box stays compact */
+      section h2 {
+        font-size: 0.85rem;
+      }
+
+      /* Footer legend */
+      .legend {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Full-page photo overlay — click name to open, click photo or press Esc to close -->
+  <div id="photo-overlay">
+    <img src="photo.jpg" alt="Lillian Fishman" id="overlay-img" />
+  </div>
+
+  <header>
+  <header>
+  <header>
+    <h1><span id="name-toggle">Lillian Fishman</span> <span id="photo-hint" style="font-size:0.75rem; color:var(--fg); opacity:0; transition:opacity 0.2s ease; pointer-events:none; font-weight:400;">photo</span></h1>
+    <p>I’m a writer in New York. <span id="bio-toggle" style="cursor:pointer; opacity:0.5; font-size:0.9rem;">more</span><span id="bio-more" style="display:none;"> b. 1994 <span style="color:#F0266E;">★</span> BA Barnard College / MFA NYU <span style="color:#F0266E;">★</span> Fellowships from the Axinn Foundation, Yaddo, Ucross, and Lighthouse Works <span style="color:#F0266E;">★</span> Sometimes teaching at <a href="https://centerforfiction.org/?s=lillian+fishman" class="underline-link" style="font-weight:400;" target="_blank" rel="noopener">The Center for Fiction</a> <span style="color:#F0266E;">★</span> Usually writing on sex, love, and how we reconcile ourselves to our cultures</span></p>
+  </header>
+
+  <!-- ── BOOKS ── -->
+  <section>
+    <h2>Books</h2>
+
+    <div class="entry">
+      <a href="https://substack.com/@lillianfishman/p-176574318" class="book-title" target="_blank" rel="noopener">WOMEN &amp; CHILDREN</a>
+      <span class="meta">Riverhead <span style="white-space:nowrap">— forthcoming 2027</span></span>
+      <span class="meta excerpt-link"><a href="https://www.newyorker.com/magazine/2025/05/12/travesty-fiction-lillian-fishman" target="_blank" rel="noopener">Read an excerpt in <em>The New Yorker</em></a></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://www.penguinrandomhouse.com/books/676713/acts-of-service-by-lillian-fishman/" class="book-title" target="_blank" rel="noopener">ACTS OF SERVICE</a>
+      <span class="meta">Hogarth <span style="white-space:nowrap">— 2022</span></span>
+      <span class="meta excerpt-link"><a href="https://www.theguardian.com/books/2022/jul/22/acts-of-service-by-lillian-fishman-review-a-sex-masterpiece" target="_blank" rel="noopener">“A sex masterpiece”</a>—<em>The Guardian</em></span>
+      <span id="aos-toggle" class="meta excerpt-link" style="cursor:pointer; opacity:0.5;">more</span>
+      <span id="aos-more" style="display:none;">
+        <span class="meta excerpt-link"><a href="https://www.newstatesman.com/culture/books/2022/07/the-purpose-of-sex" target="_blank" rel="noopener">“Searching and enthralling”</a>—<em>The New Statesman</em></span>
+        <span class="meta excerpt-link">“A book of exquisite moral refinement” <span style="white-space:nowrap">—Edmund White</span></span>
+        <span class="meta excerpt-link">“Radical, daring, and bracing” <span style="white-space:nowrap">—Sheila Heti</span></span>
+        <span class="meta excerpt-link">“A stylish, elegant piece of provocation” <span style="white-space:nowrap">—Mary Gaitskill</span></span>
+        <span class="meta excerpt-link">“Uncommonly smart, painful, and elegant” <span style="white-space:nowrap">—Merve Emre</span></span>
+        <span class="meta excerpt-link">Translated into seven languages</span>
+      </span>
+    </div>
+  </section>
+
+
+  <!-- ── SELECTED WRITING ── -->
+  <section>
+    <h2>Selected Writing</h2>
+
+    <div class="entry">
+      <a href="https://www.newyorker.com/preview/article/6998e57f0e87f249b9df0616" target="_blank" rel="noopener">What makes an object sexy?</a> <span style="color:var(--fg); opacity:0.4; font-weight:400; font-size:0.9rem;">new</span>
+      <span class="meta"><em>The New Yorker</em></span>
+    </div>
+
+    <div class="entry">
+      <div class="title-row"><a href="https://www.artnews.com/art-in-america/features/talia-chetrit-fashion-art-intimacy-control-1234765251/" target="_blank" rel="noopener">On Talia Chetrit</a><span class="year-label">2025</span></div>
+      <span class="meta"><em>Art in America</em></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://www.newyorker.com/books/under-review/claire-louise-bennetts-misanthropic-breakup-novel" target="_blank" rel="noopener">On Claire-Louise Bennett’s <em>Big Kiss, Bye-Bye</em></a>
+      <span class="meta"><em>The New Yorker</em></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://thepointmag.com/criticism/the-front-page/" target="_blank" rel="noopener">The Front Page <span style="color:#F0266E; -webkit-text-fill-color:#F0266E;">★</span></a>
+      <span class="meta"><em>The Point</em></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://www.newyorker.com/magazine/2025/05/12/travesty-fiction-lillian-fishman" target="_blank" rel="noopener">Travesty <span style="color:#F0266E; -webkit-text-fill-color:#F0266E;">★</span></a> <span style="color:var(--fg); opacity:0.4; font-weight:400; font-size:0.9rem;">fiction</span>
+      <span class="meta"><em>The New Yorker</em></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://www.metropolitanreview.org/p/would-you-rather-have-married-young" target="_blank" rel="noopener">Would you rather have married young?</a>
+      <span class="meta"><em>The Metropolitan Review</em></span>
+    </div>
+
+    <div class="entry">
+      <div class="title-row"><a href="https://www.washingtonpost.com/books/2024/09/23/intermezzo-sally-rooney-review/" target="_blank" rel="noopener">On Sally Rooney’s <em>Intermezzo</em></a><span class="year-label">2024</span></div>
+      <span class="meta"><em>The Washington Post</em></span>
+    </div>
+
+
+    <div class="entry">
+      <a href="https://granta.com/you-are-the-product-fishman/" target="_blank" rel="noopener">What is the read receipt for?</a>
+      <span class="meta"><em>Granta</em></span>
+    </div>
+    <div class="entry">
+      <a href="https://granta.com/isabel/" target="_blank" rel="noopener">Isabel</a> <span style="color:var(--fg); opacity:0.4; font-weight:400; font-size:0.9rem;">fiction</span>
+      <span class="meta"><em>Granta</em></span>
+    </div>
+    <div class="entry">
+      <span style="font-size:0.9rem; font-weight:500; color:var(--fg);">Higher Gossip, an advice column on sex and love, published throughout 2024</span>
+      <span class="meta"><em>The Point</em></span>
+      <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/the-holy-evil/" target="_blank" rel="noopener">The Holy Evil</a> <span style="white-space:nowrap">— on inequality and love <span style="color:#F0266E;">★</span></span></span>
+      <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/a-perfect-degree-of-subjection/" target="_blank" rel="noopener">Subjection</a> <span style="white-space:nowrap">— is good advice unromantic? <span style="color:#F0266E;">★</span></span></span>
+      <span id="gossip-toggle" class="meta excerpt-link" style="cursor:pointer; opacity:0.5;">more</span>
+      <span id="gossip-more" style="display:none;">
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/is-sex-fun/" target="_blank" rel="noopener">Is Sex Fun?</a> — is that entirely the wrong word for it?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/performance-issues/" target="_blank" rel="noopener">Performance Issues</a> — am I a dirty little slut or a fairy princess?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/dilettantes-in-love/" target="_blank" rel="noopener">Dilettantes in Love</a> — how do I reconcile my private fantasy life?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/grand-gestures/" target="_blank" rel="noopener">Grand Gestures</a> — what’s happened to the grand gesture?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/seductive-delusions/" target="_blank" rel="noopener">Seductive Delusions</a> — what do I do when my friend insists we’re in love?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/can-we-ever-trust-ourselves/" target="_blank" rel="noopener">Can We Ever Trust Ourselves?</a> — on having a horrible type</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/inappropriate-desires/" target="_blank" rel="noopener">Inappropriate Desires</a> — help, I’m attracted to young women</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/does-love-just-happen-to-us/" target="_blank" rel="noopener">Does Love Just Happen to Us?</a> — does love always hit like a lightning bolt?</span>
+        <span class="meta excerpt-link"><a href="https://thepointmag.com/advice/i-dont-want-to-go-back/" target="_blank" rel="noopener">I Don’t Want to Go Back</a> — what are advice columns for?</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- ── SOME INTERVIEWS ── -->
+  <section>
+    <h2>Some Interviews</h2>
+
+    <div class="entry">
+      <a href="https://www.newyorker.com/books/this-week-in-fiction/lillian-fishman-05-12-25" target="_blank" rel="noopener">On Sexual Politics</a>
+      <span class="meta"><em>The New Yorker</em></span>
+    </div>
+
+    <div class="entry">
+      <a href="https://thelondonmagazine.org/interview-lillian-fishman-on-sex-self-knowledge-and-psychoanalysis/" target="_blank" rel="noopener">On Sex, Self-Knowledge, and Psychoanalysis</a>
+      <span class="meta"><em>The London Magazine</em></span>
+    </div>
+
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section>
+    <h2>Contact</h2>
+
+    <div class="entry">
+      <span class="meta"><a href="https://www.publishersmarketplace.com/members/DKirschen/" class="underline-link" target="_blank" rel="noopener">Dan Kirschen</a>, <a href="mailto:daniel.kirschen@caa.com">daniel.kirschen@caa.com</a></span>
+      <span class="meta"><a href="https://lillianfishman.substack.com/?utm_campaign=profile_chips" class="underline-link" target="_blank" rel="noopener">Follow me on Substack</a> for occasional updates</span>
+    </div>
+  </section>
+
+  <footer><span class="legend"><span style="color:#F0266E; font-size:0.9rem;">★</span> my favorites</span></footer>
+
+  <script>
+    var PHOTO = 'photo.jpg';
+
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    function applyPhoto() {
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+
+      var imgRatio = 3 / 4;
+      var vwRatio = vw / vh;
+      var bgW, bgH;
+      if (vwRatio > imgRatio) {
+        bgW = vw; bgH = vw / imgRatio;
+      } else {
+        bgH = vh; bgW = vh * imgRatio;
+      }
+      var offsetX = (vw - bgW) / 2;
+      var offsetY = (vh - bgH) / 2;
+
+      var els = document.querySelectorAll('header a, section a, footer a, #name-toggle');
+      els.forEach(function(el) {
+        if (dark) {
+          el.style.backgroundImage = 'none';
+        } else if (isSafari) {
+          // Safari: use 100vw/100vh to ensure full coverage
+          el.style.backgroundImage      = "url('" + PHOTO + "')";
+          el.style.backgroundAttachment = 'fixed';
+          el.style.backgroundSize       = '100vw 100vh';
+          el.style.backgroundPosition   = 'center 80%';
+          el.style.backgroundRepeat     = 'no-repeat';
+          el.style.webkitBackgroundClip = 'text';
+          el.style.backgroundClip       = 'text';
+        } else {
+          // Chrome: use scroll + per-element positioning
+          var rect = el.getBoundingClientRect();
+          var posX = (offsetX - rect.left) + 'px';
+          var posY = (offsetY - rect.top) + 'px';
+          el.style.backgroundImage      = "url('" + PHOTO + "')";
+          el.style.backgroundAttachment = 'scroll';
+          el.style.backgroundSize       = bgW + 'px ' + bgH + 'px';
+          el.style.backgroundPosition   = posX + ' ' + posY;
+          el.style.backgroundRepeat     = 'no-repeat';
+          el.style.webkitBackgroundClip = 'text';
+          el.style.backgroundClip       = 'text';
+        }
+      });
+    }
+    window.addEventListener('load', function() {
+      document.body.style.opacity = '1';
+      setTimeout(applyPhoto, 100);
+    });
+    window.addEventListener('resize', applyPhoto);
+    window.addEventListener('scroll', applyPhoto, {passive: true});
+
+    // ★ cursor trail
+    var trailTick = 0;
+    document.addEventListener('mousemove', function(e) {
+      if (++trailTick % 4 !== 0) return;
+      var star = document.createElement('span');
+      star.textContent = '★';
+      star.style.cssText = 'position:fixed; left:' + e.clientX + 'px; top:' + e.clientY + 'px; font-size:10px; color:#F0266E; pointer-events:none; opacity:0.5; transition:opacity 0.6s ease, transform 0.6s ease; z-index:9997; transform:translate(-50%,-50%);';
+      document.body.appendChild(star);
+      requestAnimationFrame(function() {
+        star.style.opacity = '0';
+        star.style.transform = 'translate(-50%, -50%) scale(0.3)';
+      });
+      setTimeout(function() { star.remove(); }, 650);
+    });
+
+    // Scroll reveal for sections
+    var sections = document.querySelectorAll('section');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          applyPhoto();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
+    sections.forEach(function(s) { observer.observe(s); });
+
+    // Reset link colors when returning to page on mobile
+    window.addEventListener('pageshow', function() {
+      document.querySelectorAll('header a, section a, footer a').forEach(function(el) {
+        el.style.webkitTextFillColor = '';
+      });
+    });
+
+    // Touch-and-hold reveals photo through link text on mobile
+    document.querySelectorAll('header a, section a, footer a').forEach(function(el) {
+      var holdTimer;
+
+      el.addEventListener('touchstart', function(e) {
+        holdTimer = setTimeout(function() {
+          el.style.webkitTextFillColor = 'transparent';
+        }, 150);
+      }, { passive: true });
+
+      function revert() {
+        clearTimeout(holdTimer);
+        setTimeout(function() {
+          el.style.webkitTextFillColor = '';
+        }, 300);
+      }
+
+      el.addEventListener('touchend', revert);
+      el.addEventListener('touchcancel', revert);
+      el.addEventListener('touchmove', revert);
+
+      // Reset after click so link doesn't stay transparent when returning to page
+      el.addEventListener('click', function() {
+        setTimeout(function() {
+          el.style.webkitTextFillColor = '';
+          el.style.backgroundImage = '';
+          applyPhoto();
+        }, 100);
+      });
+    });
+
+
+
+    var overlay    = document.getElementById('photo-overlay');
+    var nameToggle = document.getElementById('name-toggle');
+
+    nameToggle.addEventListener('mouseenter', function() {
+      document.getElementById('photo-hint').style.opacity = '0.4';
+    });
+    nameToggle.addEventListener('mouseleave', function() {
+      document.getElementById('photo-hint').style.opacity = '0';
+    });
+
+    nameToggle.addEventListener('click', function() {
+      if (overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+      } else {
+        overlay.classList.add('visible');
+      }
+    });
+
+    overlay.addEventListener('click', function() {
+      overlay.classList.remove('visible');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') overlay.classList.remove('visible');
+    });
+
+
+    // Bio expand/collapse
+    var bioToggle = document.getElementById('bio-toggle');
+    var bioMore   = document.getElementById('bio-more');
+    bioToggle.addEventListener('click', function() {
+      var open = bioMore.style.display !== 'none';
+      bioMore.style.display = open ? 'none' : 'inline';
+      bioToggle.textContent = open ? 'more' : 'less';
+    });
+
+    // Higher Gossip expand/collapse
+    var gossipToggle = document.getElementById('gossip-toggle');
+    var gossipMore   = document.getElementById('gossip-more');
+    gossipToggle.addEventListener('click', function() {
+      var open = gossipMore.style.display !== 'none';
+      gossipMore.style.display = open ? 'none' : 'block';
+      gossipToggle.textContent = open ? 'more' : 'less';
+    });
+
+    // Acts of Service quotes expand/collapse
+    var aosToggle = document.getElementById('aos-toggle');
+    var aosMore   = document.getElementById('aos-more');
+    aosToggle.addEventListener('click', function() {
+      var open = aosMore.style.display !== 'none';
+      aosMore.style.display = open ? 'none' : 'block';
+      aosToggle.textContent = open ? 'more' : 'less';
+    });
+
+    // Theme is handled by CSS prefers-color-scheme media query
+  </script>
+
+</body>
+</html>
