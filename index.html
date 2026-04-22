@@ -326,8 +326,6 @@
   </div>
 
   <header>
-  <header>
-  <header>
     <h1><span id="name-toggle">Lillian Fishman</span> <span id="photo-hint" style="font-size:0.75rem; color:var(--fg); opacity:0; transition:opacity 0.2s ease; pointer-events:none; font-weight:400;">photo</span></h1>
     <p>I’m a writer in New York. <span id="bio-toggle" style="cursor:pointer; opacity:0.5; font-size:0.9rem;">more</span><span id="bio-more" style="display:none;"> b. 1994 <span style="color:#F0266E;">★</span> BA Barnard College / MFA NYU <span style="color:#F0266E;">★</span> Fellowships from the Axinn Foundation, Yaddo, Ucross, and Lighthouse Works <span style="color:#F0266E;">★</span> Sometimes teaching at <a href="https://centerforfiction.org/?s=lillian+fishman" class="underline-link" style="font-weight:400;" target="_blank" rel="noopener">The Center for Fiction</a> <span style="color:#F0266E;">★</span> Usually writing on sex, love, and how we reconcile ourselves to our cultures</span></p>
   </header>
@@ -345,11 +343,8 @@
     <div class="entry">
       <a href="https://www.penguinrandomhouse.com/books/676713/acts-of-service-by-lillian-fishman/" class="book-title" target="_blank" rel="noopener">ACTS OF SERVICE</a>
       <span class="meta">Hogarth <span style="white-space:nowrap">— 2022</span></span>
-      <span class="meta excerpt-link"><a href="https://www.theguardian.com/books/2022/jul/22/acts-of-service-by-lillian-fishman-review-a-sex-masterpiece" target="_blank" rel="noopener">“A sex masterpiece”</a>—<em>The Guardian</em></span>
-      <span id="aos-toggle" class="meta excerpt-link" style="cursor:pointer; opacity:0.5;">more</span> <span class="meta excerpt-link"><a href="https://www.newstatesman.com/culture/books/2022/07/the-purpose-of-sex" target="_blank" rel="noopener">“Searching and enthralling”</a>—<em>The New Statesman</em></span>
-      <span id="aos-more" style="display:none;">“A book of exquisite moral refinement”—Edmund White <span style="color:#F0266E;">★</span> “Radical, daring, and bracing” —Sheila Heti <span style="color:#F0266E;">★</span>“A stylish, elegant piece of provocation” —Mary Gaitskill <span style="color:#F0266E;">★</span>““Uncommonly smart, painful, and elegant” —Merve Emre <span style="color:#F0266E;">★</span></span>Translated into seven languages
-      
-      </span>
+      <span class="meta">Hogarth <span style="white-space:nowrap">— 2022</span></span>
+      <span class="meta excerpt-link"><a href="https://www.theguardian.com/books/2022/jul/22/acts-of-service-by-lillian-fishman-review-a-sex-masterpiece" target="_blank" rel="noopener">“A sex masterpiece”</a>—<em>The Guardian</em> <span id="aos-toggle" style="cursor:pointer; opacity:0.5; font-size:0.9rem; font-weight:400;">more</span><span id="aos-more" style="display:inline; font-size:0.9rem; font-weight:400;"> <span style="color:#F0266E;">★</span> <a href="https://www.newstatesman.com/culture/books/2022/07/the-purpose-of-sex" target="_blank" rel="noopener">“Searching and enthralling”</a>—<em>The New Statesman</em> <span style="color:#F0266E;">★</span> “A book of exquisite moral refinement”—Edmund White <span style="color:#F0266E;">★</span> “Radical, daring, and bracing”—Sheila Heti <span style="color:#F0266E;">★</span> “A stylish, elegant piece of provocation”—Mary Gaitskill <span style="color:#F0266E;">★</span> “Uncommonly smart, painful, and elegant”—Merve Emre <span style="color:#F0266E;">★</span> Translated into seven languages</span></span>
     </div>
   </section>
 
@@ -624,7 +619,7 @@
     var aosMore   = document.getElementById('aos-more');
     aosToggle.addEventListener('click', function() {
       var open = aosMore.style.display !== 'none';
-      aosMore.style.display = open ? 'none' : 'block';
+      aosMore.style.display = open ? 'none' : 'inline';
       aosToggle.textContent = open ? 'more' : 'less';
     });
 
