@@ -273,6 +273,26 @@
       #overlay-img { outline-color: var(--fg); }
     }
 
+    #photo-credit {
+      display: block;
+      text-align: right;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--fg);
+      -webkit-text-fill-color: var(--fg);
+      text-decoration: none;
+      opacity: 0.35;
+      margin-top: 1.25rem;
+      text-transform: lowercase;
+      transition: opacity 0.15s ease;
+      background-image: none !important;
+    }
+
+    #photo-credit:hover {
+      opacity: 0.8;
+      -webkit-text-fill-color: var(--fg);
+    }
+
     /* Disable photo reveal in dark mode */
     @media (prefers-color-scheme: dark) {
       a:hover,
@@ -327,8 +347,11 @@
 <body>
 
   <!-- Full-page photo overlay — click name to open, click photo or press Esc to close -->
-  <div id="photo-overlay">
-    <img src="photo.jpg" alt="Lillian Fishman" id="overlay-img" />
+  <div id="photo-overlay" style="flex-direction:column; align-items:center;">
+    <div style="display:inline-flex; flex-direction:column; max-width:100%; max-height:100%;">
+      <img src="photo.jpg" alt="Lillian Fishman" id="overlay-img" />
+      <a id="photo-credit" href="https://angalisfield.com" target="_blank" rel="noopener">angalis field</a>
+    </div>
   </div>
 
   <header>
@@ -342,7 +365,7 @@
     <h2>Books</h2>
 
     <div class="entry">
-      <a href="https://substack.com/@lillianfishman/p-176574318" class="book-title" target="_blank" rel="noopener">WOMEN &amp; CHILDREN</a>
+      <span class="book-title" style="font-size:0.9rem; font-weight:500; color:var(--fg);">WOMEN &amp; CHILDREN</span>
       <span class="meta">Riverhead <span style="white-space:nowrap">— forthcoming May 2027</span></span>
       <span class="meta"><a href="https://www.newyorker.com/magazine/2025/05/12/travesty-fiction-lillian-fishman" target="_blank" rel="noopener">Read an excerpt in <em>The New Yorker</em></a></span>
     </div>
