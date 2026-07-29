@@ -306,6 +306,18 @@
       }
     }
 
+    /* Disable photo reveal on mobile in light mode — no mousemove to
+       position the photo, so transparent text just disappears against
+       the light background. Darken instead. */
+    @media (max-width: 600px) and (prefers-color-scheme: light) {
+      a:hover, a:active,
+      #name-toggle:hover, #name-toggle:active,
+      .entry .meta a:hover, .entry .meta a:active {
+        -webkit-text-fill-color: #131a1d !important;
+        color: #131a1d !important;
+      }
+    }
+
     @media (max-width: 600px) {
       html { font-size: 16px; }
 
