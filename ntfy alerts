@@ -1,0 +1,28 @@
+name: Site alerts
+on:
+  page_build:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event_name == 'page_build'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [ "${{ github.event.build.status }}" = "built" ]; then
+            curl -s -H "Title: Site deployed" -d "lillianfishman.com is live with your latest changes" ntfy.sh/lf-site-k7q2v9mx
+          else
+            curl -s -H "Title: Deploy failed" -H "Priority: high" -d "GitHub Pages build failed" ntfy.sh/lf-site-k7q2v9mx
+          fi
+
+  uptime:
+    if: github.event_name != 'page_build'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 https://lillianfishman.com || echo 000)
+          if [ "$code" != "200" ]; then
+            curl -s -H "Title: lillianfishman.com is down" -H "Priority: urgent" -d "Returned HTTP $code" ntfy.sh/lf-site-k7q2v9mx
+          fi
